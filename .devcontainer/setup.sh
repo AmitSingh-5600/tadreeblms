@@ -45,6 +45,11 @@ done
 composer config audit.block-insecure false 2>/dev/null || true
 composer install --no-interaction --ignore-platform-reqs 2>/dev/null || true
 php artisan key:generate --force
+
+# Laravel needs these for sessions, cache, views
+mkdir -p storage/framework/{sessions,views,cache} storage/logs
+chmod -R 775 storage bootstrap/cache
+
 php artisan migrate:fresh --force --seed
 
 echo "installed" > installed
