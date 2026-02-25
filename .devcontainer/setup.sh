@@ -12,8 +12,9 @@ sed -i 's/^DB_USERNAME=.*/DB_USERNAME=root/' .env
 sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD=secret/' .env
 sed -i 's/^APP_INSTALLED=.*/APP_INSTALLED=true/' .env
 
-echo "Waiting for MySQL..."
-for i in $(seq 1 30); do
+echo "Waiting for MySQL (may take 1–2 min on first start)..."
+sleep 45
+for i in $(seq 1 60); do
   if php -r "
     try {
       new PDO('mysql:host=db;dbname=tadreeblms', 'root', 'secret');
@@ -25,8 +26,17 @@ for i in $(seq 1 30); do
     echo "MySQL is ready."
     break
   fi
-  if [ "$i" -eq 30 ]; then
-    echo "MySQL did not become ready. Run: bash .devcontainer/setup.sh"
+  if [ "$i" -eq 60 ]; then
+    echo "MySQL did not become ready. Last error:"
+    php -r "
+      try {
+        new PDO('mysql:host=db;dbname=tadreeblms', 'root', 'secret');
+      } catch (Exception \$e) {
+        echo \$e->getMessage();
+      }
+    " 2>&1
+    echo ""
+    echo "Check: PORTS tab should show 3306. If not, the db service may not be running."
     exit 1
   fi
   sleep 2
