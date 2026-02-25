@@ -1,0 +1,14 @@
+{
+  "name": "Tadreeb LMS (Laravel + MySQL)",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/tadreeblms",
+  "runServices": ["db"],
+  "forwardPorts": [8000, 3306],
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": ["bmewburn.vscode-intelephense-client"]
+    }
+  }
+}
