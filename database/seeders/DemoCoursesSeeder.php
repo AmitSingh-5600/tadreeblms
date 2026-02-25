@@ -52,7 +52,7 @@ class DemoCoursesSeeder extends Seeder
                 'price'        => 0,
                 'published'    => $i % 2,
                 'free'         => 1,
-                'start_date'   => now()->addDays(7),
+                'start_date'   => now()->addDays(7)->format('Y-m-d'),
                 'created_at'   => Carbon::now()->subDays(count($titles) - 1 - $i),
                 'updated_at'   => Carbon::now()->subDays(count($titles) - 1 - $i),
             ]);
