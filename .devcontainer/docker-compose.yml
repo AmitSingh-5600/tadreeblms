@@ -1,7 +1,9 @@
 # Codespaces: PHP app + MySQL (matches upstream/main)
 services:
   app:
-    image: mcr.microsoft.com/devcontainers/php:8.2
+    build:
+      context: .
+      dockerfile: Dockerfile
     depends_on:
       db:
         condition: service_healthy
