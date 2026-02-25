@@ -112,6 +112,32 @@
     filter: brightness(0.95);
 }
 
+/* Recent Courses card: match above cards (rounded corners, padding) */
+.recent-courses-card.card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.recent-courses-card .card-header {
+    padding: 0.85rem 1.25rem;
+}
+.recent-courses-card .card-body {
+    padding: 1rem 1.25rem;
+}
+.recent-courses-card .table {
+    border-radius: 0 0 8px 8px;
+}
+.recent-courses-card .table thead th {
+    padding: 0.75rem 1rem;
+}
+.recent-courses-card .table td {
+    padding: 0.75rem 1rem;
+}
+/* View/Edit buttons same width */
+.recent-courses-card .btn-action-fixed {
+    min-width: 4rem;
+    text-align: center;
+}
 
 </style>
 @endpush
@@ -464,13 +490,12 @@ $local_lang = App::getLocale() ?? 'en';
 @if(auth()->user()->hasRole('administrator') && isset($recent_courses))
 <div class="row mt-4">
     <div class="col-12">
-        <div class="card">
+        <div class="card recent-courses-card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">@lang('strings.backend.dashboard.Recent-Courses')</h5>
                 <a href="{{ route('admin.courses.index') }}" class="btn btn-sm btn-primary">View All</a>
             </div>
-            <div class="card-body p-0">
-                @if($recent_courses->isNotEmpty())
+            <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
                         <thead>
@@ -484,31 +509,32 @@ $local_lang = App::getLocale() ?? 'en';
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($recent_courses as $course)
-                            <tr>
-                                <td>{{ $course->title }}</td>
-                                <td>{{ $course->category->name ?? '-' }}</td>
-                                <td>{{ $course->teachers->map(fn($t) => trim($t->first_name . ' ' . $t->last_name))->implode(', ') ?: '-' }}</td>
-                                <td>
-                                    <span class="badge badge-{{ $course->published ? 'success' : 'secondary' }}">
-                                        {{ $course->published ? 'Published' : 'Draft' }}
-                                    </span>
-                                </td>
-                                <td>{{ $course->created_at ? $course->created_at->format(config('app.date_format', 'Y-m-d')) : '-' }}</td>
-                                <td>
-                                    <a href="{{ route('admin.courses.show', $course->id) }}" class="btn btn-sm btn-info mr-1">View</a>
-                                    <a href="{{ route('admin.courses.edit', $course->id) }}" class="btn btn-sm btn-success">Edit</a>
-                                </td>
-                            </tr>
-                            @endforeach
+                            @if($recent_courses->isNotEmpty())
+                                @foreach($recent_courses as $course)
+                                <tr>
+                                    <td>{{ $course->title }}</td>
+                                    <td>{{ $course->category->name ?? '-' }}</td>
+                                    <td>{{ $course->teachers->map(fn($t) => trim($t->first_name . ' ' . $t->last_name))->implode(', ') ?: '-' }}</td>
+                                    <td>
+                                        <span class="badge badge-{{ $course->published ? 'success' : 'secondary' }}">
+                                            {{ $course->published ? 'Published' : 'Draft' }}
+                                        </span>
+                                    </td>
+                                    <td>{{ $course->created_at ? $course->created_at->format(config('app.date_format', 'Y-m-d')) : '-' }}</td>
+                                    <td>
+                                        <a href="{{ route('admin.courses.show', $course->id) }}" class="btn btn-sm btn-info btn-action-fixed mr-1">View</a>
+                                        <a href="{{ route('admin.courses.edit', $course->id) }}" class="btn btn-sm btn-success btn-action-fixed">Edit</a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="6" class="text-muted py-4">No courses yet.</td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
-                @else
-                <div class="p-3">
-                    <p class="mb-0">No courses yet.</p>
-                </div>
-                @endif
             </div>
         </div>
     </div>
