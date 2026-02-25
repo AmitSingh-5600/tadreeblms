@@ -45,8 +45,7 @@ done
 composer config audit.block-insecure false 2>/dev/null || true
 composer install --no-interaction --ignore-platform-reqs 2>/dev/null || true
 php artisan key:generate --force
-php artisan migrate --force
-php artisan db:seed --force
+php artisan migrate:fresh --force --seed
 
 echo "installed" > installed
 
